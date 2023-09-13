@@ -1,6 +1,7 @@
 const os = require('os');
 
 console.log('운영체제 정보---------------------');
+// arch, platform, type 은 분기 처리 등에 사용이 됨.
 console.log(`os.arch(): ${os.arch()}`)
 console.log(`os.platform(): ${os.platform()}`)
 console.log(`os.type(): ${os.type()}`)
