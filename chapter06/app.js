@@ -1,20 +1,13 @@
 const express = require('express');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 dotenv.config();
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
 
-app.use((req, res, next) => {
-    console.log('1');
-    next();
-});
-
-app.use((req, res, next) => {
-    console.log('2');
-    next();
-});
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
     res.send('Hello, Express');
