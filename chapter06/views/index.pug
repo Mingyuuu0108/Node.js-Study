@@ -1,6 +1,13 @@
 doctype html 
 html 
     head 
-        title Hello 
+        title= title
     body 
-        h1 Hello!
+        if title
+            h1 Hello! This is #{title}
+        else 
+            h1 title is not defined
+
+        ul
+            each item in items 
+                li= item
