@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
+const nunjucks = require('nunjucks');
 
 const indexRouter = require('./routes');
 const userRouter = require('./routes/user');
@@ -15,7 +16,15 @@ app.set('port', process.env.PORT || 3000);
 
 // pug 사용을 위한 view engine 추가
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+// pug
+// app.set('view engine', 'pug');
+
+// nunjucks
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch: true,
+});
 
 // morgan : dev 모드의 콘솔 로그 출력
 app.use(morgan('dev'));

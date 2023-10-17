@@ -4,10 +4,15 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     // index.pug 파일을 랜더링
+    // res.render('index', {
+    //     title: "Pug Test",
+    //     items: ['apple', 'melon', 'mango'],
+    // });
+
+    // index.html 파일을 랜더링
     res.render('index', {
-        // 데이터 전달
-        title: "Pug Test",
-        items: ['apple', 'melon', 'mango']
+        title: "Nunjucks Test",
+        items: ['apple', 'melon', 'mango'],
     });
 })
 
