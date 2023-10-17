@@ -13,6 +13,10 @@ const app = express();
 // process.env.PORT : 환경변수의 PORT 가져옴
 app.set('port', process.env.PORT || 3000);
 
+// pug 사용을 위한 view engine 추가
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
 // morgan : dev 모드의 콘솔 로그 출력
 app.use(morgan('dev'));
  // static : Controller 접근 이전 public 폴더 내부에 있는 사진을 가지고 옴
