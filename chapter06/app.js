@@ -40,12 +40,16 @@ app.use('/user', userRouter);
 
 // 404 에러 핸들러
 app.use((req, res, next) => {
-    res.status(404).send('Not Found');
+    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+    error.status = 404;
+    next(error);
 });
 
 app.use((error, req, res, next) => {
-    console.error(error);
-    res.status(500).send(error.message);
+    res.locals.message = err.message;
+    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 app.listen(app.get('port'), () => {
