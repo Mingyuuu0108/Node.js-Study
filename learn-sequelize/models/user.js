@@ -12,7 +12,7 @@ class User extends Sequelize.Model {
                 type: Sequelize.INTEGER.UNSIGNED,
                 allowNull: false,
             },
-            marraid: {
+            married: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },

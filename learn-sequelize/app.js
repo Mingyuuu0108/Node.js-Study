@@ -3,6 +3,8 @@ const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
 
+const indexRouter = require('./routes')
+
 const { sequelize } = require('./models');
 
 const app = express();
@@ -25,6 +27,12 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use('/', indexRouter);
+
+app.use((err, req, res, next) => {
+
+});
 
 app.listen(app.get('port'), () => {
     console.log(`${app.get('port')}번 포트에서 대기 중`)
