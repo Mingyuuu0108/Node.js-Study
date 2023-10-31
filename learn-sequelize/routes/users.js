@@ -29,6 +29,18 @@ router.route('/')
     }
   });
 
+router.delete('/:id', async(req, res, next) => {
+  try {
+    const user = await User.destroy({
+      where: { id: req.params.id }
+    });
+    res.json(user);
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 router.get('/:id/comments', async (req, res, next) => {
   try {
     const comments = await Comment.findAll({
