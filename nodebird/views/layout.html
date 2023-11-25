@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
-    <meta charset="UTF-8">
-    <title>{{title}}</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="/main.css">
+    <meta charset="UTF-8" />
+    <title>{{ title }}</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
     <div class="container">
       <div class="profile-wrap">
         <div class="profile">
           {% if user and user.id %}
+          <div class="user-info">
             <div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
             <div class="half">
               <div>팔로잉</div>
@@ -21,42 +25,94 @@
               <div>팔로워</div>
               <div class="count follower-count">{{followerCount}}</div>
             </div>
-          <input id="my-id" type="hidden" value="{{user.id}}">
-          <a id="my-profile" href="/profile" class="btn">내 프로필</a>
-          <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
-        {% else %}
+            <input id="my-id" type="hidden" value="{{user.id}}" />
+          </div>
+
+          <div class="buttons">
+            <a id="my-profile" href="/profile" class="btn">내 프로필</a>
+            <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
+          </div>
+
+          <div id="change-nickname-form" style="display: none">
+            <label for="nick">새 닉네임</label>
+            <input
+              id="nick"
+              type="text"
+              name="nick"
+              value="{{ user.nick }}"
+              required
+            />
+            <button id="change-nickname-btn" class="btn">변경</button>
+          </div>
+
+          <button
+            id="show-change-nickname-form"
+            class="btn"
+            style="display: block"
+          >
+            닉네임 변경
+          </button>
+          {% else %}
           <form id="login-form" action="/auth/login" method="post">
             <div class="input-group">
               <label for="email">이메일</label>
-              <input id="email" type="email" name="email" required autofocus>
+              <input id="email" type="email" name="email" required autofocus />
             </div>
             <div class="input-group">
               <label for="password">비밀번호</label>
-              <input id="password" type="password" name="password" required>
+              <input id="password" type="password" name="password" required />
             </div>
             <a id="join" href="/join" class="btn">회원가입</a>
             <button id="login" type="submit" class="btn">로그인</button>
-            <a id="kakao" href="/auth/kakao" class="btn">카카오톡</a>
           </form>
-        {% endif %}
+          {% endif %}
         </div>
         <footer>
           Made by&nbsp;
           <a href="https://www.zerocho.com" target="_blank">ZeroCho</a>
         </footer>
       </div>
-      {% block content %}
-      {% endblock %}
+      {% block content %} {% endblock %}
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
       window.onload = () => {
-        if (new URL(location.href).searchParams.get('error')) {
-          alert(new URL(location.href).searchParams.get('error'));
-        }
+        const showError = () => {
+          const error = new URL(location.href).searchParams.get("error");
+          if (error) {
+            alert(error);
+          }
+        };
+
+        document.getElementById("show-change-nickname-form").addEventListener("click", () => {
+          document.getElementById("show-change-nickname-form").style.display = "none";
+          document.getElementById("change-nickname-form").style.display = "block";
+        });
+
+        document.getElementById("change-nickname-btn").addEventListener("click", () => {
+          const newNickname = document.getElementById("nick").value.trim();
+
+          if (!newNickname) {
+            return window.alert("닉네임을 입력해주세요!");
+          }
+
+          axios
+            .patch("/user/change-nickname", { nick: newNickname })
+            .then((response) => {
+              console.log("Nickname changed successfully");
+              document.getElementById("change-nickname-form").style.display = "none";
+              document.querySelector(".user-name").textContent = "안녕하세요! " + newNickname + "님";
+              window.location.replace("/");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        });
+
+        showError();
       };
     </script>
-    {% block script %}
-    {% endblock %}
+
+    {% block script %} {% endblock %}
   </body>
 </html>

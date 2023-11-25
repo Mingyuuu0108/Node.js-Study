@@ -1,3 +1,5 @@
+/*
+카카오 로그인 기능 삭제
 const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
 
@@ -30,3 +32,4 @@ module.exports = () => {
     }
   }));
 };
+*/
