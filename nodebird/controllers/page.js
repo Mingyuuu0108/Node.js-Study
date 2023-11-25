@@ -47,4 +47,4 @@ exports.renderHashtag = async (req, res, next) => {
     console.error(error);
     return next(error);
   }
-}; 
+};
