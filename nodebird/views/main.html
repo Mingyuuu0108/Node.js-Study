@@ -35,7 +35,18 @@
             {% elif twit.User.id !== user.id %} 
               <button class="twit-unfollow">언팔로우하기</button>
             {% endif %}
-            <div class="twit-content">{{twit.content}}</div>
+
+            {% if twit.User.id === user.id %}
+              <button class="twit-edit">수정하기</button>
+              <button class="twit-delete" data-id="{{twit.id}}">삭제하기</button>
+            {% endif %}
+
+            {% if twit.editMode %}
+              <input type="text" class="twit-edit-input" value="{{twit.content}}" />
+              <button class="twit-edit-submit">완료</button>
+            {% else %} 
+              <div class="twit-content">{{twit.content}}</div>
+            {% endif %}
             {% if twit.img %}
               <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
             {% endif %}
@@ -82,6 +93,7 @@
         }
       });
     });
+
     // 언팔로우 js 코드
     document.querySelectorAll(".twit-unfollow").forEach(function (tag) {
     tag.addEventListener("click", function () {
@@ -100,6 +112,52 @@
               });
           }
         }
+      }
+    });
+  });
+
+  // 게시물 수정 js 코드
+  document.querySelectorAll(".twit-edit").forEach(function (editBtn) {
+    editBtn.addEventListener("click", function () {
+      const twitContent = editBtn.parentNode.querySelector(".twit-content");
+      const twitInput = document.createElement("input");
+      twitInput.type = "text";
+      twitInput.value = twitContent.textContent.trim();
+      twitContent.innerHTML = "";
+      twitContent.appendChild(twitInput);
+
+      const submitBtn = document.createElement("button");
+      submitBtn.textContent = "완료";
+      twitContent.appendChild(submitBtn);
+
+      submitBtn.addEventListener("click", function () {
+        const twitId = editBtn.parentNode.querySelector(".twit-id").value;
+        const updatedContent = twitInput.value;
+
+        axios
+          .patch(`/post/${twitId}/edit`, { content: updatedContent })
+          .then(() => {
+            location.reload();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      });
+    });
+  });
+  // 게시물 삭제 js 코드
+  document.querySelectorAll(".twit-delete").forEach(function (deleteBtn) {
+    deleteBtn.addEventListener("click", function () {
+      const postId = deleteBtn.dataset.id;
+      if (confirm("게시물을 삭제하시겠습니까?")) {
+        axios
+          .delete(`/post/${postId}/delete`)
+          .then(() => {
+            deleteBtn.closest(".twit").remove();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
     });
   });

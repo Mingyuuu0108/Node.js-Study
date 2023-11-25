@@ -29,3 +29,33 @@ exports.uploadPost = async (req, res, next) => {
     next(error);
   }
 };
+
+// 게시물 수정 기능
+exports.editPost = async (req, res, next) => {
+  try {
+    const { content } = req.body;
+    const postId = req.params.id;
+    const post = await Post.findByPk(postId);
+
+    post.content = content;
+
+    await post.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+// 게시물 삭제 기능
+exports.deletePost = async (req, res, next) => {
+  try {
+    const postId = req.params.id;
+    
+    await Post.destroy({ where: { id: postId } });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
